@@ -1,0 +1,15 @@
+C:\Sandbox\Map-search\MapSearch\MapSearch\bin\Debug\net6.0\MapSearch.exe
+C:\Sandbox\Map-search\MapSearch\MapSearch\bin\Debug\net6.0\MapSearch.deps.json
+C:\Sandbox\Map-search\MapSearch\MapSearch\bin\Debug\net6.0\MapSearch.runtimeconfig.json
+C:\Sandbox\Map-search\MapSearch\MapSearch\bin\Debug\net6.0\MapSearch.dll
+C:\Sandbox\Map-search\MapSearch\MapSearch\bin\Debug\net6.0\ref\MapSearch.dll
+C:\Sandbox\Map-search\MapSearch\MapSearch\bin\Debug\net6.0\MapSearch.pdb
+C:\Sandbox\Map-search\MapSearch\MapSearch\obj\Debug\net6.0\MapSearch.csproj.AssemblyReference.cache
+C:\Sandbox\Map-search\MapSearch\MapSearch\obj\Debug\net6.0\MapSearch.GeneratedMSBuildEditorConfig.editorconfig
+C:\Sandbox\Map-search\MapSearch\MapSearch\obj\Debug\net6.0\MapSearch.AssemblyInfoInputs.cache
+C:\Sandbox\Map-search\MapSearch\MapSearch\obj\Debug\net6.0\MapSearch.AssemblyInfo.cs
+C:\Sandbox\Map-search\MapSearch\MapSearch\obj\Debug\net6.0\MapSearch.csproj.CoreCompileInputs.cache
+C:\Sandbox\Map-search\MapSearch\MapSearch\obj\Debug\net6.0\MapSearch.dll
+C:\Sandbox\Map-search\MapSearch\MapSearch\obj\Debug\net6.0\ref\MapSearch.dll
+C:\Sandbox\Map-search\MapSearch\MapSearch\obj\Debug\net6.0\MapSearch.pdb
+C:\Sandbox\Map-search\MapSearch\MapSearch\obj\Debug\net6.0\MapSearch.genruntimeconfig.cache

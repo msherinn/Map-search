@@ -25,34 +25,16 @@ class Program
 
     static void Split(TreeNode root)
     {
-        var sorted = new List<Point>();
         if (root.Axis == "x")
         {
-            sorted.Add(root.Content[0]);
-            for (var i = 1; i < root.Content.Count; i++)
-            {
-                var inserted = false;
-                for (var j = 0; j < sorted.Count; j++)
-                {
-                    if (root.Content[i].Lat < sorted[j].Lat)
-                    {
-                        sorted.Insert(j, root.Content[i]);
-                        inserted = true;
-                    }
-                }
+            root.Content.Sort((x, y) => x.Lat.CompareTo(y.Lat));
 
-                if (inserted == false)
-                {
-                    sorted.Add(root.Content[i]);
-                }
-            }
-
-            var median = sorted.Count / 2;
-            var left = new TreeNode(sorted[0].Lat, root.MinLon, sorted[median].Lat, root.MaxLon, "y");
-            left.Content = sorted.Take(median).ToList();
+            var median = root.Content.Count / 2;
+            var left = new TreeNode(root.Content[0].Lat, root.MinLon, root.Content[median].Lat, root.MaxLon, "y");
+            left.Content = root.Content.Take(median).ToList();
             left.Parent = root;
-            var right = new TreeNode(sorted[median + 1].Lat, root.MinLon, sorted[median + 1].Lat, root.MaxLon, "y");
-            right.Content = sorted.Skip(median).ToList();
+            var right = new TreeNode(root.Content[median + 1].Lat, root.MinLon, root.Content[median + 1].Lat, root.MaxLon, "y");
+            right.Content = root.Content.Skip(median).ToList();
             right.Parent = root;
             
             root.LeftChild = left;
@@ -63,37 +45,20 @@ class Program
                 Split(left);
                 Split(right);
             }
-
+            
             return;
         }
         
         else
         {
-            sorted.Add(root.Content[0]);
-            for (var i = 1; i < root.Content.Count; i++)
-            {
-                var inserted = false;
-                for (var j = 0; j < sorted.Count; j++)
-                {
-                    if (root.Content[i].Lon < sorted[j].Lon)
-                    {
-                        sorted.Insert(j, root.Content[i]);
-                        inserted = true;
-                    }
-                }
-
-                if (inserted == false)
-                {
-                    sorted.Add(root.Content[i]);
-                }
-            }
-
-            var median = sorted.Count / 2;
-            var left = new TreeNode(root.MinLat, sorted[0].Lon, root.MaxLat, sorted[median].Lon, "x");
-            left.Content = sorted.Take(median).ToList();
+            root.Content.Sort((x, y) => x.Lon.CompareTo(y.Lon));
+            
+            var median = root.Content.Count / 2;
+            var left = new TreeNode(root.MinLat, root.Content[0].Lon, root.MaxLat, root.Content[median].Lon, "x");
+            left.Content = root.Content.Take(median).ToList();
             left.Parent = root;
-            var right = new TreeNode(root.MinLat, sorted[median + 1].Lon, root.MaxLat, sorted[median + 1].Lon, "x");
-            right.Content = sorted.Skip(median).ToList();
+            var right = new TreeNode(root.MinLat, root.Content[median + 1].Lon, root.MaxLat, root.Content[median + 1].Lon, "x");
+            right.Content = root.Content.Skip(median).ToList();
             right.Parent = root;
 
             root.LeftChild = left;
@@ -104,7 +69,8 @@ class Program
                 Split(left);
                 Split(right);
             }
-
+            
+            Console.WriteLine("finished");
             return;
         }
         

@@ -76,6 +76,42 @@ class Program
         
     }
 
+    static List<Point> Search(TreeNode root, float lat, float lon, int radius)
+    {
+        var center = new Point(lat, lon);
+        var result = new List<Point>();
+        
+        if (!root.Content.Contains(center))
+        {
+            return null;
+        }
+
+        else
+        {
+            if (root.LeftChild == null || root.RightChild == null)
+            {
+                foreach (var point in root.Content)
+                {
+                    if (Haversine(lat, point.Lat, lon, point.Lon) < radius)
+                    {
+                        result.Add(point);
+                    }
+                }
+            }
+            else if (root.LeftChild.Content.Contains(center))
+            {
+                result = Search(root.LeftChild, lat, lon, radius);
+            }
+            
+            else if (root.RightChild.Content.Contains(center))
+            {
+                result = Search(root.RightChild, lat, lon, radius);
+            }
+        }
+
+        return result;
+    }
+
     static void Main(string[] args)
     {
         var LATITUDE = 0;
@@ -164,26 +200,6 @@ class Program
         }
         
         Split(root);
-
-        /*List<string[]> results = new List<string[]>();
-        for (var i = 0; i < data.Count; i++)
-        {
-            var goalLat = float.Parse(data[i][0]);
-            var goalLon = float.Parse(data[i][1]);
-            var distance = Haversine(lat, goalLat, lon, goalLon);
-            if (distance < radius)
-            {
-                results.Add(data[i]);
-            }
-        }
-
-        var j = 1;
-        foreach (var result in results)
-        {
-            Console.WriteLine(j + ". lat: " + result[LATITUDE] + ", lon: " + result[LONGITUDE] + ", category: " + result[CATEGORY]
-                              + ", type: " + result[TYPE] + ", name: " + result[NAME] + ", street: " + result[STREET] + ", building: " + result[BUILDING]);
-            j++;
-        }*/
 
         Console.ReadLine();
     }

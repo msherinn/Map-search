@@ -1,4 +1,8 @@
-﻿class Program
+﻿using System.Linq;
+using System.Xml.Xsl;
+using MapSearch;
+
+class Program
 {
     static double Haversine(float lat1, float lat2, float lon1, float lon2)
     {
@@ -15,6 +19,95 @@
 
         var d = (R * c) / 1000; // in kilometers
         return d;
+    }
+
+    static int turn = 0;
+
+    static void Split(TreeNode root)
+    {
+        var sorted = new List<Point>();
+        if (root.Axis == "x")
+        {
+            sorted.Add(root.Content[0]);
+            for (var i = 1; i < root.Content.Count; i++)
+            {
+                var inserted = false;
+                for (var j = 0; j < sorted.Count; j++)
+                {
+                    if (root.Content[i].Lat < sorted[j].Lat)
+                    {
+                        sorted.Insert(j, root.Content[i]);
+                        inserted = true;
+                    }
+                }
+
+                if (inserted == false)
+                {
+                    sorted.Add(root.Content[i]);
+                }
+            }
+
+            var median = sorted.Count / 2;
+            var left = new TreeNode(sorted[0].Lat, root.MinLon, sorted[median].Lat, root.MaxLon, "y");
+            left.Content = sorted.Take(median).ToList();
+            left.Parent = root;
+            var right = new TreeNode(sorted[median + 1].Lat, root.MinLon, sorted[median + 1].Lat, root.MaxLon, "y");
+            right.Content = sorted.Skip(median).ToList();
+            right.Parent = root;
+            
+            root.LeftChild = left;
+            root.RightChild = right;
+
+            if (left.Content.Count > 100)
+            {
+                Split(left);
+                Split(right);
+            }
+
+            return;
+        }
+        
+        else
+        {
+            sorted.Add(root.Content[0]);
+            for (var i = 1; i < root.Content.Count; i++)
+            {
+                var inserted = false;
+                for (var j = 0; j < sorted.Count; j++)
+                {
+                    if (root.Content[i].Lon < sorted[j].Lon)
+                    {
+                        sorted.Insert(j, root.Content[i]);
+                        inserted = true;
+                    }
+                }
+
+                if (inserted == false)
+                {
+                    sorted.Add(root.Content[i]);
+                }
+            }
+
+            var median = sorted.Count / 2;
+            var left = new TreeNode(root.MinLat, sorted[0].Lon, root.MaxLat, sorted[median].Lon, "x");
+            left.Content = sorted.Take(median).ToList();
+            left.Parent = root;
+            var right = new TreeNode(root.MinLat, sorted[median + 1].Lon, root.MaxLat, sorted[median + 1].Lon, "x");
+            right.Content = sorted.Skip(median).ToList();
+            right.Parent = root;
+
+            root.LeftChild = left;
+            root.RightChild = right;
+            
+            if (left.Content.Count > 100)
+            {
+                Split(left);
+                Split(right);
+            }
+
+            return;
+        }
+        
     }
 
     static void Main(string[] args)
@@ -63,7 +156,50 @@
             data.Add(columns);
         }
 
-        List<string[]> results = new List<string[]>();
+        float minLat = float.Parse(data[0][0]);
+        float minLon = float.Parse(data[0][1]);
+        float maxLat = float.Parse(data[0][0]);
+        float maxLon = float.Parse(data[0][1]);
+
+        for (var i = 0; i < data.Count; i++)
+        {
+            if (float.Parse(data[i][0]) < minLat)
+            {
+                minLat = float.Parse(data[i][0]);
+            }
+            
+            else if (float.Parse(data[i][1]) < minLon)
+            {
+                minLon = float.Parse(data[i][1]);
+            }
+            
+            else if (float.Parse(data[i][0]) > maxLat)
+            {
+                maxLat = float.Parse(data[i][0]);
+            }
+            
+            else if (float.Parse(data[i][1]) > maxLon)
+            {
+                maxLon = float.Parse(data[i][1]);
+            }
+        }
+
+        var root = new TreeNode(minLat, minLon, maxLat, maxLon, "x");
+
+        for (var i = 0; i < data.Count; i++)
+        {
+            var point = new Point(float.Parse(data[i][0]), float.Parse(data[i][1]));
+            point.Category = data[i][CATEGORY];
+            point.Type = data[i][TYPE];
+            point.Name = data[i][NAME];
+            point.Street = data[i][STREET];
+            point.Building = data[i][BUILDING];
+            root.Content.Add(new Point(float.Parse(data[i][0]), float.Parse(data[i][1])));
+        }
+        
+        Split(root);
+
+        /*List<string[]> results = new List<string[]>();
         for (var i = 0; i < data.Count; i++)
         {
             var goalLat = float.Parse(data[i][0]);
@@ -81,7 +217,7 @@
             Console.WriteLine(j + ". lat: " + result[LATITUDE] + ", lon: " + result[LONGITUDE] + ", category: " + result[CATEGORY]
                               + ", type: " + result[TYPE] + ", name: " + result[NAME] + ", street: " + result[STREET] + ", building: " + result[BUILDING]);
             j++;
-        }
+        }*/
 
         Console.ReadLine();
     }
